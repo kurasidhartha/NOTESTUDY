@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Teacher Dashboard — EduNotes</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <!-- ═══ LOGIN SCREEN ═══ -->
+  <div id="login-screen" class="fullscreen-center login-bg">
+    <div class="auth-box">
+      <div class="auth-brand"><i class="fas fa-book-open-reader"></i> EduNotes</div>
+      <h2>Teacher Sign-in</h2>
+      <p class="auth-sub">Upload and manage notes for your students</p>
+
+      <div class="field-group">
+        <label>Email</label>
+        <div class="field-wrap">
+          <i class="fas fa-envelope"></i>
+          <input type="email" id="auth-email" placeholder="you@school.edu" autocomplete="email" />
+        </div>
+      </div>
+      <div class="field-group">
+        <label>Password</label>
+        <div class="field-wrap">
+          <i class="fas fa-lock"></i>
+          <input type="password" id="auth-password" placeholder="••••••••" autocomplete="current-password" />
+        </div>
+      </div>
+
+      <p id="auth-error" class="auth-error"></p>
+
+      <button id="btn-login" class="btn-primary full" onclick="doLogin()">
+        <span>Sign in</span><i class="fas fa-arrow-right"></i>
+      </button>
+      <button id="btn-register" class="btn-ghost full" onclick="doRegister()">
+        Create teacher account
+      </button>
+
+      <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to home</a>
+    </div>
+  </div>
+
+  <!-- ═══ DASHBOARD ═══ -->
+  <div id="dashboard" class="hidden">
+
+    <nav class="app-nav">
+      <div class="brand"><i class="fas fa-book-open-reader"></i> EduNotes</div>
+      <div class="nav-right">
+        <span id="nav-email" class="nav-email"></span>
+        <button class="btn-danger-sm" onclick="doLogout()"><i class="fas fa-right-from-bracket"></i> Log out</button>
+      </div>
+    </nav>
+
+    <main class="dash-main">
+      <div class="dash-header">
+        <h1>Dashboard</h1>
+        <p>Add new notes or manage what you've already uploaded.</p>
+      </div>
+
+      <div class="dash-grid">
+
+        <!-- ── UPLOAD PANEL ── -->
+        <section class="panel upload-panel">
+          <h3 class="panel-title"><i class="fas fa-cloud-arrow-up"></i> Add a note</h3>
+
+          <div class="field-group">
+            <label>Title <span class="req">*</span></label>
+            <input type="text" id="f-title" placeholder="e.g. Chapter 5 — Kinematics" />
+          </div>
+
+          <div class="field-group">
+            <label>Subject <span class="req">*</span></label>
+            <select id="f-subject">
+              <option value="">— choose subject —</option>
+              <option>Mathematics</option>
+              <option>Physics</option>
+              <option>Chemistry</option>
+              <option>Biology</option>
+              <option>Computer Science</option>
+              <option>English</option>
+              <option>History</option>
+              <option>Geography</option>
+              <option>Economics</option>
+              <option>Other</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label>Description <span class="opt">(optional)</span></label>
+            <textarea id="f-desc" rows="3" placeholder="What does this note cover?"></textarea>
+          </div>
+
+          <div class="field-group">
+            <label>File <span class="req">*</span></label>
+            <div id="drop-zone" class="drop-zone" onclick="document.getElementById('f-file').click()"
+                 ondragover="dzOver(event)" ondragleave="dzLeave()" ondrop="dzDrop(event)">
+              <i class="fas fa-file-arrow-up"></i>
+              <p>Drag file here or <span class="dz-click">click to browse</span></p>
+              <p class="dz-hint">PDF · Word · PPT · Excel · TXT &nbsp;(max 50 MB)</p>
+              <input type="file" id="f-file" style="display:none"
+                     accept=".pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx,.txt"
+                     onchange="fileChosen(this.files[0])" />
+            </div>
+            <div id="file-chip" class="file-chip hidden">
+              <i id="chip-icon" class="fas fa-file"></i>
+              <div><span id="chip-name"></span><br><small id="chip-size"></small></div>
+              <button type="button" onclick="clearFile()" title="Remove"><i class="fas fa-xmark"></i></button>
+            </div>
+          </div>
+
+          <div id="upload-progress" class="progress-wrap hidden">
+            <div class="progress-track"><div id="progress-bar" class="progress-bar"></div></div>
+            <span id="progress-pct">0%</span>
+          </div>
+
+          <button id="btn-upload" class="btn-primary full" onclick="doUpload()">
+            <i class="fas fa-upload"></i> Upload note
+          </button>
+        </section>
+
+        <!-- ── NOTES LIST ── -->
+        <section class="panel list-panel">
+          <div class="list-header">
+            <h3 class="panel-title"><i class="fas fa-files"></i> My uploads <span id="count-badge" class="badge">0</span></h3>
+            <div class="search-wrap">
+              <i class="fas fa-magnifying-glass"></i>
+              <input type="search" id="t-search" placeholder="Filter notes…" oninput="filterTeacherNotes()" />
+            </div>
+          </div>
+          <div id="teacher-list" class="note-list">
+            <div class="state-loading"><i class="fas fa-spinner fa-spin"></i> Loading…</div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <!-- Toast -->
+  <div id="toast" class="toast hidden"></div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="teacher.js"></script>
+</body>
+</html>

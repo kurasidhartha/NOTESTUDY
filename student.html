@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Notes Library — EduNotes</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+</head>
+<body>
+
+  <nav class="app-nav">
+    <div class="brand"><i class="fas fa-book-open-reader"></i> EduNotes</div>
+    <a href="index.html" class="nav-home-link"><i class="fas fa-house"></i> Home</a>
+  </nav>
+
+  <main class="student-main">
+
+    <div class="library-header">
+      <h1>Notes Library</h1>
+      <p>Browse notes your teachers have shared. No sign-in required.</p>
+    </div>
+
+    <!-- Search -->
+    <div class="lib-search-row">
+      <div class="search-wrap big">
+        <i class="fas fa-magnifying-glass"></i>
+        <input type="search" id="s-search" placeholder="Search by title, subject, or description…"
+               oninput="applyFilters()" />
+      </div>
+    </div>
+
+    <!-- Subject pills -->
+    <div id="subject-pills" class="subject-pills">
+      <button class="pill active" data-subj="all" onclick="pillClick(this)">All notes</button>
+    </div>
+
+    <!-- Stats row -->
+    <div class="lib-stats">
+      <span><i class="fas fa-file-lines"></i> <strong id="stat-notes">—</strong> notes</span>
+      <span><i class="fas fa-tag"></i> <strong id="stat-subjects">—</strong> subjects</span>
+    </div>
+
+    <!-- Notes grid -->
+    <div id="student-grid" class="student-grid">
+      <div class="state-loading"><i class="fas fa-spinner fa-spin"></i> Loading notes…</div>
+    </div>
+
+  </main>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-storage-compat.js"></script>
+  <script src="firebase-config.js"></script>
+  <script src="student.js"></script>
+</body>
+</html>
