@@ -221,3 +221,4 @@ By default, Firebase only allows requests from localhost. Add your GitHub Pages 
 | Storage downloads | 1 GB/day |
 
 More than enough for a classroom of 100–500 students.
+https://kurasidhartha.github.io/NOTESTUDY/
